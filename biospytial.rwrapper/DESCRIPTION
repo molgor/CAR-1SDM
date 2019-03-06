@@ -1,13 +1,14 @@
 Package: biospytial.rwrapper
-Title: What the Package Does (One Line, Title Case)
+Title: CAR Model adapted to species distribution models using presence-only data
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Juan",
+           family = "Escamilla Mólgora",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "j.escamillamolgora@lancaster.ac.uk")
+Description: A version of CARBayes to model species distribution using presence only
+data. 
+License: GPL3 (with attribution :) )
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
