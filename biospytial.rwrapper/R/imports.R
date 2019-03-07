@@ -1,6 +1,6 @@
 # From CARBayes
 
- common.verbose <- getFromNamespace('common.verbose','CARBayes')
+common.verbose <- getFromNamespace('common.verbose','CARBayes')
 
 common.frame <- getFromNamespace('common.frame','CARBayes')
 
@@ -17,7 +17,7 @@ n.comp.nb <- getFromNamespace('n.comp.nb','spdep')
 
 binomialbetaupdateMALA <- getFromNamespace('binomialbetaupdateMALA','CARBayes')
 
-inomialcarupdateMALA <- getFromNamespace('binomialcarupdateMALA','CARBayes')
+binomialcarupdateMALA <- getFromNamespace('binomialcarupdateMALA','CARBayes')
 
 binomialindepupdateMALA <- getFromNamespace('binomialindepupdateMALA','CARBayes')
 
