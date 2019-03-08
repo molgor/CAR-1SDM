@@ -1,10 +1,10 @@
 ## Arguments from s.carbym
-
+ 
 formula=formula_sample
 family="binomial"
 W=M_bis
 trials = trials
-data=TDF
+data=DataFrame
 burnin=10000
 n.sample=15000
 verbose = TRUE
@@ -230,6 +230,7 @@ tau2.posterior.shape <- prior.tau2[1] + 0.5 * (K-n.islands)
         temp1 <- binomialcarupdateRW(Wtriplet=W.triplet, Wbegfin=W.begfin, Wtripletsum=W.triplet.sum, nsites=K, phi=phi, tau2=tau2, y=Y.DA, failures=failures.DA, phi_tune=proposal.sd.phi, rho=1, offset=beta.offset)
         }
     phi <- temp1[[1]]
+    #### Why substract mean of islands
     phi[which(islands==1)] <- phi[which(islands==1)] - mean(phi[which(islands==1)])
     accept[3] <- accept[3] + temp1[[2]]
     accept[4] <- accept[4] + K
@@ -248,6 +249,7 @@ tau2.posterior.shape <- prior.tau2[1] + 0.5 * (K-n.islands)
         temp2 <- binomialindepupdateRW(nsites=K, theta=theta, sigma2=sigma2, y=Y.DA, failures=failures.DA, theta_tune=proposal.sd.theta, offset=beta.offset) 
         }
     theta <- temp2[[1]]
+    ### Same thing, substracting theta
     theta <- theta - mean(theta)    
     accept[5] <- accept[5] + temp2[[2]]
     accept[6] <- accept[6] + K          

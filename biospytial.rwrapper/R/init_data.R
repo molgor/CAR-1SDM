@@ -11,6 +11,7 @@ library(CARBayes)
 library(dplyr)
 library(purrr)
 library(reticulate)
+library(biospytial.rwrapper)
 
 # Import adjancency matrix generated from region
 mat_filename = "/outputs/training_data_sample_puebla_p9_abies_pinophyta_adjmat.npy"
@@ -47,10 +48,17 @@ cell_with_no_neighbour = TDF$cellids[idx]
 ## Erase idx for M and for TDF (Or maybe only for M)
 M_bis = M[-c(idx),-c(idx)]
 
+###
+# Preprocess for generating pseudo absences
+# Change the name of a column that for some reason is called the same
+names(TDF)[23] <- 'covid2'
+DataFrame = TDF %>% rowwise() %>% 
+            mutate(sample=pseudo_absence_naive(Plantae,LUCA),species=pseudo_absence_naive(Pinophyta,Plantae))
 
+###
 # Formula definition
-formula_sample=LUCA~Disttoroadm+Populationm #+factor(tipos)
-formula_presence=Pinophyta~Elevationm+MeanTempm
+formula_sample=sample~Disttoroadm+Populationm #+factor(tipos)
+formula_presence=species~Elevationm+MeanTempm
 n <- nrow(TDF)
 trials <- rep(1,n)
 
