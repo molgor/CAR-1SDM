@@ -5,5 +5,17 @@ This is a pacakge to use Dataframes in Biospytial compatible with the models use
 
 Currently supports CAR models. See documentation.
 
+### Development workflow
+
+Please run the following
+1. imports.R (will import the necessary packages from CARBayes)
+2. init_data.R (will load the data and preprocess it)
+
+3. my.binomial.bymCAR.R (this has the customized function) 
+
+
+
+
+
 
 
