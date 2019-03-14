@@ -186,6 +186,33 @@ tau2.posterior.shape <- prior.tau2[1] + 0.5 * (K-n.islands)
     }
 
 
+### Run function CompleteCarSampler
+thing =  CompleteCarSampler(X.standardised = X.standardised, 
+                            K = K, 
+                            p = p,
+                            beta = beta,
+                            offset.temp = offset.temp,
+                            Y.DA = Y.DA,
+                            failures.DA = failures.DA,
+                            trials = trials,
+                            prior.mean.beta = prior.mean.beta,
+                            prior.var.beta = prior.var.beta,
+                            n.beta.block = n.beta.block,
+                            proposal.sd.beta = proposal.sd.beta,
+                            list.block = list.block,
+                            Wtriplet=W.triplet,
+                            Wbegfin = Wbegfin,
+                            Wtripletsum = Wtripletsum,
+                            phi=phi,
+                            tau2 = tau2,
+                            proposal.sd.phi = proposal.sd.phi,
+                            theta = theta,
+                            sigma2 = sigma2,
+                            proposal.sd.theta = proposal.sd.theta,
+                            iter_index = 1) 
+  
+
+
 #### Create the MCMC samples      
     for(j in 1:n.sample)
     {
