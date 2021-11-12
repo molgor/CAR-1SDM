@@ -1,0 +1,61 @@
+\begin{figure}
+\label{fig:M1}
+\centering
+\begin{tikzpicture}[node distance=2.5cm,>=stealth',bend angle=45]
+  \tikzstyle{latent}=[circle,thick,draw=black!75,fill=blue!20,minimum size=10mm]
+  \tikzstyle{data}=[regular polygon,regular polygon sides=4,thick,draw=black!75,fill=orange!20,minimum size=7mm]
+  \tikzstyle{parameter}=[latent,fill=gray!20,minimum
+  size=7mm]
+  \tikzstyle{obs}=[rectangle,thick,draw=black!75,fill=black!20,minimum size=10mm]
+  \tikzstyle{null}=[]
+  \tikzstyle{every label}=[black]
+
+  \begin{scope}
+    % First net
+    \node [obs,label={above:sample}](X)    {$X$};
+    \node [null](nulltop) [right = 0.5cm of X] {};
+    \node [null](nullmid) [below of=nulltop] {};
+    \node [null](nulldow) [below of=nullmid] {};
+    \node [obs,label={above:presence}] (Y)  [right = 0.5cm of nulltop]  {$Y$};
+    \node [latent] (Py) [below of=Y] {$P_Y$};
+    \node [latent] (Px) [below of=X] {$P_X$};
+    \node [parameter] (betax) [left = 1cm of Px] {$\beta_X$};
+    \node [parameter] (betay) [right = 1cm of Py] {$\beta_Y$};
+    \node [data]   (dx) [below = 0.5cm  of betax] {$d_X$};
+    \node [data]   (dy) [below = 0.5cm of betay] {$d_Y$};
+    \node [latent] (Rx) [below of=Px] {$R_X$};
+    \node [latent] (Ry) [below of=Py] {$R_Y$};
+    \node [latent] (Sx) [below = 1cm of Rx]
+      {$S_X$};
+    \node [latent] (Sy) [below = 1cm of Ry]
+      {$S_Y$};
+    \node [latent] (Zy) [below of=dy] {$Z_Y$};
+    \node [latent] (Zx) [below of=dx] {$Z_X$};
+    \end{scope}
+
+
+      \begin{scope}
+        \path [->, thick] (Px) edge node {} (X);
+        \path [->, thick] (Py) edge node {} (Y);
+        \path [->, thick] (Ry) edge node {}(Py);
+        \path [->, thick] (Rx) edge node {} (Px);
+        \path [->, thick] (Sx) edge (Rx);
+        \path [->, thick] (Sy) edge (Ry);
+        \path [->, thick] (Zx) edge (Rx);
+        \path [->, thick] (Zy) edge (Ry);
+        \path [->, thick] (betax) edge (Px);
+        \path [->, thick] (dx) edge (Px);
+        \path [->, thick] (betay) edge (Py);
+        \path [->, thick] (dy) edge (Py);
+      \end{scope}
+
+
+      \begin{pgfonlayer}{background}
+    \filldraw [line width=4mm,join=round,black!15]
+        (Rx.north -| Zx.west)  rectangle (Sy.south
+        -| Zy.east);
+      %  (w1'.north -| l1'.east) rectangle (w2'.south -| e1'.west);
+    \end{pgfonlayer}
+\end{tikzpicture}
+\caption{DAG for model I}
+\end{figure}

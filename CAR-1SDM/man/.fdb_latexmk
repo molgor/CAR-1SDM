@@ -1,0 +1,11 @@
+# Fdb version 3
+["pdflatex"] 1631556267 "/usr/share/texlive/texmf-dist/tex/latex/tools/.tex" ".pdf" "" 1631556267
+  ".aux" 1631317975 8 a94a2480d3289e625eea47cd1b285758 ""
+  "/etc/texmf/web2c/texmf.cnf" 1631217473 475 c0e671620eb5563b2130f56340a5fde8 ""
+  "/usr/share/texlive/texmf-dist/tex/latex/tools/.tex" 1580683321 1387 61978446de5910c38984a931259097b5 ""
+  "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1613593815 38841 799d1dd9682a55ce442e10c99777ecc1 ""
+  "/usr/share/texmf/web2c/texmf.cnf" 1613593815 38841 799d1dd9682a55ce442e10c99777ecc1 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1631217513 2571600 007276599838d4aa9129dd539bf7883a ""
+  (generated)
+  ".pdf"
+  ".log"

@@ -1,0 +1,7 @@
+PWD /home/juan/git_projects/biospytial3/app/external_plugins/biospytial_rwrapper/CAR-1SDM/man
+INPUT /etc/texmf/web2c/texmf.cnf
+INPUT /usr/share/texmf/web2c/texmf.cnf
+INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
+INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
+INPUT /usr/share/texlive/texmf-dist/tex/latex/tools/.tex
+OUTPUT .log
