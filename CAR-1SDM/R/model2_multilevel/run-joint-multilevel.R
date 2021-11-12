@@ -1,16 +1,21 @@
 # This is the script that implements the Model 2 (common GMRF)
+## Cross validation
+library(pROC)
+library('caret')
 
 ## Set Working directory
 ## Import code:
-setwd('/apps/external_plugins/biospytial_rwrapper/biospytial.rwrapper/R/')
+#setwd('/app/external_plugins/biospytial_rwrapper/CAR-1SDM')
 ## remove any previous object
-rm(list=ls())                                                                                     
+#rm(list=ls())
 
 ## Init data source with variables
-print('Load data source and preprocess')
-source("init_data.R")                                                                             
-# load the building function                                                                      
-#source("joint.binomial.bymCAR.R")
+#print('Load data source and preprocess')
+
+formula_sample =  sample ~ Disttoroadm + Populationm
+formula_presence = species ~ Elevationm + Precipitationm
+
+
 
 ## Build dataframes, S<- Sample, P<- Presence
 S <- model.frame(formula_sample, DataFrame,na.action='na.pass')
@@ -24,10 +29,11 @@ Py <- select(P, c(1))
 
 names(Sy) <- 'response'
 names(Py) <- names(Sy)
-## Cross validation
+## Stack both processes into same dataframe
+## First the responses (Y) will be concatenated by row.
 Y = rbind(Sy,Py)
 
-### Let's build covariance matrix
+###
 T1 <- matrix(rep(0,4), ncol = 2)
 T2 <- matrix(rep(0,4), ncol = 2)
 T1[1,1] <- 1
@@ -63,9 +69,6 @@ thin = 50
 
 
 
-## Cross validation
-library(pROC)
-library('caret')
 #trains = createFolds(y = DataFrame$species, k=7, returnTrain = TRUE)
 #validate = createFolds(y = DataFrame$species, k=7, returnTrain = FALSE)
 

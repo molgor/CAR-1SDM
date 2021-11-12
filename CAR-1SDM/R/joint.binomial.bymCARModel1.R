@@ -93,7 +93,6 @@ CarSampler.presence  <- model.presence$f_sampler
     for(j in 1:n.sample)
     {
     ## Iteration of the CarSampler
-    ## What happen with the hyperparameters ??  
       sample.state <-  CarSampler.sample(Y.DA = sample.state$Y.DA,
                       beta =  sample.state$beta,
                       phi = sample.state$phi,

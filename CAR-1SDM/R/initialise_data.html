@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-09-14 Tue 15:04 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Initialise data for the presence-only distribution model of pines (family Pinacea)</title>
+<meta name="author" content="Juan M. Escamilla Mólgora," />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Initialise data for the presence-only distribution model of pines (family Pinacea)</h1>
+<p>
+This is a script for loading all necessary data for processing the example for inferring the distribution of pines.
+</p>
+
+<div id="outline-container-org6ae9001" class="outline-2">
+<h2 id="org6ae9001"><span class="section-number-2">1.</span> Necessary libraries</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li><p>
+<b>CAR-1SDM</b> loads the necessary functions for the models.
+</p>
+<div class="org-src-container">
+<pre class="src src-R">    <span style="color: #f78c6c;">library</span>(CAR-1SDM)
+</pre>
+</div></li>
+</ul>
+
+
+<ul class="org-ul">
+<li><p>
+<b>CARBayes</b> is a CAR implementation developed by <a class='org-ref-reference' href="#Lee2013">Lee2013</a>. We can use this library with adequate data transformation to apply models I, II and III.
+</p>
+<div class="org-src-container">
+<pre class="src src-R">    <span style="color: #f78c6c;">library</span>(CARBayes)
+</pre>
+</div></li>
+
+<li><p>
+Some libraries for data handling and loading numpy arrays.
+</p>
+<div class="org-src-container">
+<pre class="src src-R">    <span style="color: #f78c6c;">library</span>(dplyr)
+    <span style="color: #f78c6c;">library</span>(purrr)
+    <span style="color: #f78c6c;">library</span>(reticulate)
+</pre>
+</div></li>
+</ul>
+</div>
+
+
+<div id="outline-container-org00ea9a6" class="outline-3">
+<h3 id="org00ea9a6"><span class="section-number-3">1.1.</span> Loading the <i>choosing principle</i> functions</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+These are functions that define the presence, relative absences and missing observations.
+</p>
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #f78c6c;">source</span>(<span style="color: #c3e88d;">"ChoosingPrinciple.R"</span>)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgeacffb6" class="outline-3">
+<h3 id="orgeacffb6"><span class="section-number-3">1.2.</span> Read the adjancency matrix of the spatial lattice</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+The spatial lattice is represented as an adjacency matrix obtained by another sofware. However you could generate this matrix of any given spatial vector format (e.g. ESRI Shapefile) using the function &rsquo;combine.data.shapefile&rsquo; provided by <b>CARBayes</b>. Refer to the <a href="https://cran.r-project.org/web/packages/CARBayes/CARBayes.pdf">CARBayes documentation</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #676E95;">#</span><span style="color: #676E95;">file = '/outputs/presence_only_models/predictors/dataset100x100-puebla-p9/0-pred.csv'</span>
+<span style="color: #676E95;">#</span><span style="color: #676E95;">PDF = read.csv(file)</span>
+<span style="color: #676E95;">## </span><span style="color: #676E95;">REad adjancency matrix</span>
+<span style="color: #676E95;"># </span><span style="color: #676E95;">Import adjancency matrix generated from region</span>
+mat_filename = <span style="color: #c3e88d;">"/outputs/training_data_sample_puebla_p9_abies_pinophyta_adjmat.npy"</span>
+<span style="color: #676E95;"># </span><span style="color: #676E95;">Use numpy functions</span>
+np <span style="color: #f78c6c;">&lt;-</span> import(<span style="color: #c3e88d;">"numpy"</span>)
+M <span style="color: #f78c6c;">&lt;-</span> np$<span style="color: #f78c6c;">load</span>(mat_filename)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4ff1644" class="outline-3">
+<h3 id="org4ff1644"><span class="section-number-3">1.3.</span> Read <i>training</i> dataframe</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+We will first load the dataframe as &rsquo;TDF&rsquo; and the sort the rows according to their &rsquo;cell<sub>ids</sub>&rsquo; to match that of the adjancency matrix.
+</p>
+<div class="org-src-container">
+<pre class="src src-R">TDF = read.csv(<span style="color: #c3e88d;">"/outputs/training_data_sample_puebla_p9_abies_pinophyta.csv"</span>)
+<span style="color: #676E95;">#</span><span style="color: #676E95;">TDF = read.csv("/outputs/training_data_sample_puebla_p9_tyrannidae_birds.csv")</span>
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Order it according to the id of the cell</span>
+TDF = TDF[order(TDF$cell_ids),]
+<span style="color: #676E95;"># </span><span style="color: #676E95;">Convert the columns to numeric</span>
+TDF = mutate_at(TDF,vars(Dist.to.road_m,Elevation_m,
+                         MaxTemp_m,MeanTemp_m,
+                         MinTemp_m,Population_m,
+                         Precipitation_m,
+                         SolarRadiation_m,
+                         VaporPres_m,
+                         WindSp_m),as.numeric)
+
+<span style="color: #676E95;"># </span><span style="color: #676E95;">Remove unnecessary symbols in variable names</span>
+names(TDF) = lapply(names(TDF),<span style="color: #89DDFF;">function</span>(x) gsub(<span style="color: #c3e88d;">"_"</span>,<span style="color: #c3e88d;">""</span>,x))
+names(TDF) = lapply(names(TDF),<span style="color: #89DDFF;">function</span>(x) gsub(<span style="color: #c3e88d;">"\\."</span>,<span style="color: #c3e88d;">""</span>,x))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org323eb2e" class="outline-3">
+<h3 id="org323eb2e"><span class="section-number-3">1.4.</span> Generating relative absences with  the <i>choosing principle</i></h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+There are two treatments for the assigning missing data, treatment I that assumes missing data in both processes and treatment II that assigns missing data only to the sampling effort. This later treatment has less uncertainty but the assumption of absences is strong. Uncomment the code to use the other treatment.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #676E95;"># </span><span style="color: #676E95;">Change the name of a column that for some reason is called the same</span>
+names(TDF)[<span style="color: #f78c6c; font-weight: bold;">23</span>] <span style="color: #f78c6c;">&lt;-</span> <span style="color: #c3e88d;">'code_id2'</span>
+
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Treatment I, missing values in X and Y, comment this if using treatment II</span>
+DataFrame = TDF <span style="color: #f78c6c;">%&gt;%</span> rowwise() <span style="color: #f78c6c;">%&gt;%</span>
+              mutate(sample=pseudo_absence_naive(Plantae,LUCA),
+                     species=pseudo_absence_naive(Pinophyta,Plantae))
+
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Uncomment this for treatment II (i.e. missing values only in X)</span>
+<span style="color: #676E95;">#</span><span style="color: #676E95;">DataFrame = TDF %&gt;% rowwise() %&gt;%</span>
+<span style="color: #676E95;">#            </span><span style="color: #676E95;">mutate(sample=pseudo_absence_naive(Plantae,LUCA),</span>
+<span style="color: #676E95;">#                   </span><span style="color: #676E95;">species=pseudo_absence_trivial(Pinophyta,Plantae))</span>
+
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Uncomment this if you want to assume that all missing data are absences</span>
+<span style="color: #676E95;">## </span><span style="color: #676E95;">i.e. remove NAs</span>
+<span style="color: #676E95;">#</span>
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Remove entries in the adjacency matrix that correspond to missing data</span>
+<span style="color: #676E95;">#</span><span style="color: #676E95;">rr &lt;- DataFrame %&gt;%</span>
+<span style="color: #676E95;">#    </span><span style="color: #676E95;">filter(!is.na(species) &amp; !is.na(sample))</span>
+<span style="color: #676E95;">#</span>
+<span style="color: #676E95;">#</span><span style="color: #676E95;">sam_idx_nan &lt;- which(is.na(DataFrame$sample))</span>
+<span style="color: #676E95;">#</span>
+<span style="color: #676E95;">#</span><span style="color: #676E95;">M = M[-c(sam_idx_nan),-c(sam_idx_nan)]</span>
+
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Remove missig data in DataFrame</span>
+<span style="color: #676E95;">#</span><span style="color: #676E95;">DataFrame = TDF %&gt;% rowwise() %&gt;%</span>
+<span style="color: #676E95;">#  </span><span style="color: #676E95;">mutate(sample=pseudo_absence_trivial(Plantae,LUCA),</span>
+<span style="color: #676E95;">#         </span><span style="color: #676E95;">species=pseudo_absence_trivial(Pinophyta,Plantae))</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge78d56d" class="outline-3">
+<h3 id="orge78d56d"><span class="section-number-3">1.5.</span> Preprocess adjancency matrix \(M\)</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-R"><span style="color: #676E95;">## </span><span style="color: #676E95;">Remove entries with zero neighbours (adjacency matrix)</span>
+<span style="color: #676E95;">### </span><span style="color: #676E95;">Calculates number of neighbours in D (sum)</span>
+D = apply(M,MARGIN = <span style="color: #f78c6c; font-weight: bold;">1</span>,sum)
+<span style="color: #676E95;">### </span><span style="color: #676E95;">get index with 0 neighbours</span>
+idx = which(D == <span style="color: #f78c6c; font-weight: bold;">0</span>)
+
+<span style="color: #676E95;">### </span><span style="color: #676E95;">select cells with no neighbours</span>
+cell_with_no_neighbour = TDF$cellids[idx]
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Remove island for TDF</span>
+TDF <span style="color: #f78c6c;">&lt;-</span> TDF[-c(idx),]
+<span style="color: #676E95;">## </span><span style="color: #676E95;">Erase idx for M and for TDF</span>
+M_bis = M[-c(idx),-c(idx)]
+
+<span style="color: #676E95;">## </span><span style="color: #676E95;">remove rows that have no neighbours (islands)</span>
+DataFrame <span style="color: #f78c6c;">&lt;-</span> DataFrame[-c(idx),]
+
+n <span style="color: #f78c6c;">&lt;-</span> dim(M_bis)[<span style="color: #f78c6c; font-weight: bold;">1</span>]
+trials <span style="color: #f78c6c;">&lt;-</span> rep(<span style="color: #f78c6c; font-weight: bold;">1</span>,n)
+
+<span style="color: #676E95;"># </span><span style="color: #676E95;">Formula definition</span>
+formula_sample= sample ~ Disttoroadm + Populationm
+formula_presence= species~ Elevationm + Precipitationm
+
+</pre>
+</div>
+
+<p>
+
+<h1 class='org-ref-bib-h1'>Bibliography</h1>
+<ul class='org-ref-bib'><li><a id="Lee2013">[Lee2013]</a> <a name="Lee2013"></a>Lee, CARBayes : An R Package for Bayesian Spatial Modeling with Conditional Autoregressive Priors, <i>Journal of Statistical Software</i>, <b>55(13)</b>, 1-24 (2013). <a href="http://www.jstatsoft.org/v55/i13/">link</a>. <a href="http://dx.doi.org/10.18637/jss.v055.i13">doi</a>.</li>
+</ul>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Juan M. Escamilla Mólgora,</p>
+<p class="date">Created: 2021-09-14 Tue 15:04</p>
+</div>
+</body>
+</html>

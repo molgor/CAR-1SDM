@@ -1,4 +1,4 @@
-# This is a script for loading all the necessary data for processing 
+# This is a script for loading all necessary data for processing the
 # i.e. it is a preprocessing script.
 # Change it appropriately
 
@@ -36,6 +36,7 @@ TDF = mutate_at(TDF,vars(Dist.to.road_m,Elevation_m,
                          SolarRadiation_m,
                          VaporPres_m,
                          WindSp_m),as.numeric)
+
 # Remove unnecessary symbols in variable names
 names(TDF) = lapply(names(TDF),function(x) gsub("_","",x))
 names(TDF) = lapply(names(TDF),function(x) gsub("\\.","",x))

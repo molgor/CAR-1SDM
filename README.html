@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8"/>
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"  /><meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'><style> body { box-sizing: border-box; max-width: 740px; width: 100%; margin: 40px auto; padding: 0 10px; } </style><script id='MathJax-script' async src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script><script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script><script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>
+</head>
+
+<body>
+
+<h1 id="conditional-autoregressive-models-for-single-species-distributions-using-presence-only-data">Conditional autoregressive models for single species distributions using presence-only data</h1>
+<p>This repository implements the presence-only models developed in the paper: [[doi:https://doi.org/10.1101/2021.06.28.450233 ][A joint distribution framework to improve presence-only species distribution models by exploiting opportunistic surveys]]</p>
+<p>The folder ‘notebooks’ contains the interactive pipelines for fitting and displaying models I, II and III. In the current version, the model fitting is performed in R with the package[[https://cran.r-project.org/web/packages/CARBayes/index.html][CARBayes]] (Lee, 2015) and the methods for displaying the results are done in Python. Therefore, it is recommended to use Jupyter notebooks with the R kernel installed for maximum compatibility.</p>
+<p>This repository has two purposes. One, to create a reproducible environment for generating the results exposed in the paper (section: application). Second, to serve as a /user’s guide/ for adapting the models to different types of problems.</p>
+<p>As this repository is only for demonstrating purposes, it is not intended to be continuously developed in the long term. Must of the ideas specified in models I, II and III are already implemented in the package [[https://github.com/molgor/JSDM4POD][JSDM4POD]] (i.e. /joint species distribution models for presence-only data/). Currently: models I and II are contained in the JSDM4POD. In the coming future model III will be added.</p>
+<p>Thank you for your interest in this project.</p>
+<p>Please consider sending your feedback to me: j.escamillamolgora[-at-]lancaster.ac.uk</p>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+#+TITLE: Preprocessing data for the presence-only distribution model of pines (family Pinacea)
+
+#+AUTHOR: Juan M. Escamilla Mólgora,
+#+EMAIL: j.escamillamolgora@lancaster.ac.uk
+#+LANGUAGE: en
+#+PROPERTY: header-args :R :tangle yes :cache yes :results silent :comments link :exports code
+#+EXPORT_FILE_NAME:  initialise_data.pdf
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+OPTIONS: toc:nil        (no default TOC at all)
+This is a script for loading and preprocessing the data for example 1; inferring the distribution of pines.
+
+* Necessary libraries
+- *CAR-1SDM* loads the necessary functions for the models.
+    #+Begin_src R :tangle yes
+    setwd("R")
+    #library("CAR-1SDM")
+    #+end_src
+
+- *CARBayes* is a CAR implementation developed by cite:Lee2013. We can use this library with adequate data transformation to apply models I, II and III.
+    #+begin_src R :tangle yes
+    library(CARBayes)
+    #+end_src
+
+- Some libraries for data handling and loading numpy arrays.
+    #+begin_src R :tangle yes
+    library(dplyr)
+    library(purrr)
+    library(reticulate)
+    #+end_src
+
+    #+RESULTS:
+
+
+** Loading the /choosing principle/ functions
+These are functions that define the presence, relative absences and missing observations.
+#+begin_src R :tangle yes
+source("ChoosingPrinciples.R")
+#+end_src
+
+
+** Read the adjancency matrix of the spatial lattice
+The spatial lattice is represented as an adjacency matrix obtained by another sofware. However you could generate this matrix of any given spatial vector format (e.g. ESRI Shapefile) using the function 'combine.data.shapefile' provided by *CARBayes*. Refer to the [[https://cran.r-project.org/web/packages/CARBayes/CARBayes.pdf][CARBayes documentation]].
+
+#+begin_src R :tangle yes
+#file = '../data/presence_only_models/predictors/dataset100x100-puebla-p9/0-pred.csv'
+#PDF = read.csv(file)
+## REad adjancency matrix
+# Import adjancency matrix generated from region
+mat_filename = "../data/training_data_sample_puebla_p9_abies_pinophyta_adjmat.npy"
+# Use numpy functions
+np <- import("numpy")
+M <- np$load(mat_filename)
+#+end_src
+
+** Read /training/ dataframe
+We will first load the dataframe as 'TDF' and then sort the rows according to their 'cell_ids' to match that of the adjancency matrix M.
+
+#+begin_src R :tangle yes
+TDF = read.csv("../data/training_data_sample_puebla_p9_abies_pinophyta.csv")
+#TDF = read.csv("../data/training_data_sample_puebla_p9_tyrannidae_birds.csv")
+## Order it according to the id of the cell
+TDF = TDF[order(TDF$cell_ids),]
+# Convert the columns to numeric
+
+## Beware older implementations of as.numeric function turns strings to (apparently) random numeric values
+TDF = mutate_at(TDF,vars(Dist.to.road_m,Elevation_m,
+                         MaxTemp_m,MeanTemp_m,
+                         MinTemp_m,Population_m,
+                         Precipitation_m,
+                         SolarRadiation_m,
+                         VaporPres_m,
+                         WindSp_m),na_if,"N.A.")
+
+
+
+TDF = mutate_at(TDF,vars(Dist.to.road_m,Elevation_m,
+                         MaxTemp_m,MeanTemp_m,
+                         MinTemp_m,Population_m,
+                         Precipitation_m,
+                         SolarRadiation_m,
+                         VaporPres_m,
+                         WindSp_m),as.numeric)
+
+# Remove unnecessary symbols in variable names
+names(TDF) = lapply(names(TDF),function(x) gsub("_","",x))
+names(TDF) = lapply(names(TDF),function(x) gsub("\\.","",x))
+
+#+end_src
+
+** Generating relative absences with  the /choosing principle/
+There are two treatments for the assigning missing data, treatment I that assumes missing data in both processes and treatment II that assigns missing data only to the sampling effort. This later treatment has less uncertainty but the assumption of absences is strong. Uncomment the code to use the other treatment.
+
+#+begin_src R :tangle yes
+# Change the name of a column that for some reason is called the same
+names(TDF)[23] <- 'code_id2'
+
+## Treatment I, missing values in X and Y, comment this if using treatment II
+DataFrame = TDF %>% rowwise() %>%
+              mutate(sample=pseudo_absence_naive(Plantae,LUCA),
+                     species=pseudo_absence_naive(Pinophyta,Plantae))
+
+## Uncomment this for treatment II (i.e. missing values only in X)
+#DataFrame = TDF %>% rowwise() %>%
+#            mutate(sample=pseudo_absence_naive(Plantae,LUCA),
+#                   species=pseudo_absence_trivial(Pinophyta,Plantae))
+
+## Uncomment this if you want to assume that all missing data are absences
+## i.e. remove NAs
+#
+## Remove entries in the adjacency matrix that correspond to missing data
+#rr <- DataFrame %>%
+#    filter(!is.na(species) & !is.na(sample))
+#
+#sam_idx_nan <- which(is.na(DataFrame$sample))
+#
+#M = M[-c(sam_idx_nan),-c(sam_idx_nan)]
+
+## Remove missig data in DataFrame
+#DataFrame = TDF %>% rowwise() %>%
+#  mutate(sample=pseudo_absence_trivial(Plantae,LUCA),
+#         species=pseudo_absence_trivial(Pinophyta,Plantae))
+#+end_src
+
+** Preprocess adjancency matrix $M$
+There is a caveat, though. The CAR model works for connected regions only. That is, when the adjacency matrix corresponds to a connected graph. Blocks of cells that are not connected to each other are called islands and are considered independent. That is, a new model should be run for each block of disconnected cells.
+
+That is, we need to identify the blocks of isolated cells and remove them from the adjacency matrix. On order to comply with the dimension of the associate covariate (design) matrix we need to remove the associated rows (entries) corresponding to the isolated cells.
+
+#+begin_src R :tangle yes
+## Remove entries with zero neighbours (adjacency matrix)
+### Calculates number of neighbours in D (sum)
+D = apply(M,MARGIN = 1,sum)
+### get index with 0 neighbours
+idx = which(D == 0)
+
+### select cells with no neighbours
+cell_with_no_neighbour = TDF$cellids[idx]
+## Remove island for TDF
+TDF <- TDF[-c(idx),]
+## Erase idx for M and for TDF
+M_bis = M[-c(idx),-c(idx)]
+
+## remove rows that have no neighbours (islands)
+DataFrame <- DataFrame[-c(idx),]
+
+n <- dim(M_bis)[1]
+trials <- rep(1,n)
+
+#+end_src
+
+As the current implementation of CARBayes does not allow missing values in the covariates we will perform a naive imputation of missing values on each column of interest (i.e covariates associated with the models' formulas).
+
+#+begin_src R tangle: yes
+## Replace missing values with mean, Of course we could do this using other more fancy method
+covs2work = c("Disttoroadm","Populationm","Elevationm","Precipitationm","MeanTempm")
+for(i in covs2work){
+    DataFrame[,i][is.na(DataFrame[,i])] <- mean(DataFrame[,i][!is.na(DataFrame[,i])],na.rm=TRUE)
+}
+#+end_src
+
+
+
+bibliographystyle:unsrt
+bibliography:/home/juan/texmf/bibtex/bib/library.bib
