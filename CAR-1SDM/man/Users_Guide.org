@@ -12,7 +12,7 @@
 
 
 #+BEGIN_abstract
-This document is a guide to use the models described in the paper: /A joint distribution framework to improve presence-only species distribution models by exploiting opportunistic surveys/ (cite:EscamillaMolgora2021) for modelling species distributions with presence-only data.
+This document is a guide to use the models described in the paper: /A joint distribution framework to improve presence-only species distribution models by exploiting opportunistic surveys/ (cite:EscamillaMolgora2021) for modelling species distributions with presence-only data. This users' guide represents a static version. For an updated (and possibly improved) version, refer to the interactive Jupyter notebook at [https://github.com/molgor/CAR-1SDM/blob/master/CAR-1SDM/notebooks/Users-guide.ipynb].
 #+END_abstract
 
 The presented framework proposes three bayesian models for inferring single species distributions using solely observations of species occurrences (i.e. presence-only data).
@@ -159,6 +159,13 @@ params.samples <- mcmc.list(model1$P$samples$beta)
 plot(params.samples)
 #+end_src
 
+#+CAPTION: Traceplot of posterior distribution of parameters for Model I
+[[./traceplot.png]]
+#+NAME: traceplot
+#+LABEL: fig:traceplot
+
+
+
 ** Cross-validation
 In this subsection we will perform a cross-validation of model I. Cross validation of CAR models is not straight forward due to its spatial structure (lattice). The approach for this would be with data augmentation and the k-fold method (cite:Geisser1975). In this case we will randomly (without replacement) select 1/10 of the observations (sites) as missing data, fit the model, estimate the probability of $Y$ and $X$ on these sites and repeat this operation 10 times until we obtain a whole set of estimated observations. Afterwards we will calculate the the Receiver Operator Characteristic and its Area Under the Curve (i.e. AUC-ROC, also called ROC-curve).
 
@@ -194,13 +201,13 @@ cbind(npresence_0,npresence_1,nsample_0,nsample_1,n_miss_presence,n_miss_sample)
 
 ** Preparing the cross-validation
 1. We begin by loading necessary packages:
-    #+begin_src R :results output
+    #+begin_src R :results silent
     library(pROC)
     library('caret')
     #+end_src
 
 2. Create partitions for cross validation using the K-fold method (k=7) and prepare the dataframe to receive results.
-    #+begin_src R :results output
+    #+begin_src R :results silent
       nonas = which(! is.na(DataFrame$species) )
       Y_withoutNA = DataFrame$species[nonas]
       validate = createFolds(y = Y_withoutNA, k=7, returnTrain = FALSE)
@@ -212,20 +219,20 @@ cbind(npresence_0,npresence_1,nsample_0,nsample_1,n_miss_presence,n_miss_sample)
     #+end_src
 
 3. Define the formulas for the presence (environmental) process $Y$ and the sampling effort $X$
-   #+begin_src R :results output
+   #+begin_src R :results silent
      formula_sample =  sample ~ Disttoroadm + Populationm
      formula_presence = species ~ Elevationm + Precipitationm
    #+end_src
 
 4. Cross validation
    - First we define the parameters for sampling the posterior distribution (MCMC).
-   #+begin_src R :results output
+   #+begin_src R :results silent
      n.sample = 20000
      burnin=15000
      postburnin = burnin + 1000
    #+end_src
    - Perform the cross-validation
-   #+begin_src R :results output
+   #+begin_src R :results silent
      for (fold in validate) {
        observed.presences <- DataFrame$species[fold]
        ## Substitue by NA
@@ -268,8 +275,16 @@ sens.ci <- ci.se(pROC_obj)
 plot(sens.ci,type="shape",col="lightblue")
 plot(sens.ci, type="bars")
 #+end_src
+Figure 3 shows the resulting output.
 
 Procedure for cross-validating models II and III can be performed similarly.
+
+#+CAPTION: Resulting cross-validation curve
+[[./rocmodel1wNA.png]]
+#+NAME: roccurve
+#+LABEL: fig:roc
+
+
 * Model II
 This model assumes that the ecological suitability distribution ($P$) and sampling effort ($S$) processes are independent when conditioned to a common spatial structure ($G$) (a Gaussian Markov random field). The structure of the model is visualised as a directed acyclic graph (DAG) in the figure [[ref:fig:M2]].  For a detail explanation of the model refer to the supplementary materials of the manuscript.
 
@@ -349,7 +364,8 @@ formula_presence = species ~ Elevationm + Precipitationm
 S <- model.frame(formula_sample, DataFrame,na.action='na.pass')
 P <- model.frame(formula_presence, DataFrame,na.action='na.pass')
 
-## Split response variables (lefthand side) and covariates (righthand side) from the design matrix
+## Split response variables (lefthand side) and covariates (righthand side)
+## from the design matrix
 SX <- select(S, -c(1))
 PX <- select(P, -c(1))
 Sy <- select(S, c(1))
@@ -389,7 +405,8 @@ SDM <- cbind(Y,X)
 nK <- dim(M_bis)[1]
 
 ## make sequence vector for id.area
-## This is possible because the rows in adjacency matrix M_bis preserve the order of each element in the design matrix.
+## This is possible because the rows in adjacency matrix M_bis preserve the
+## order of each element in the design matrix.
 ida <- data.frame(seq(nK))
 idarea <- unlist(rbind(ida,ida))
 ## Assign values for the unstructured random effect (Zx, Zy).
@@ -548,13 +565,6 @@ model3$modelfit
 |    DIC |   p.d |    WAIC |   p.w |     LMPL | loglikelihood |
 |--------+-------+---------+-------+----------+---------------|
 | 3976.2 | 93.21 | 3966.76 | 81.39 | -1982.01 |      -1894.88 |
-
-:Logbook:
-* Extracting posterior sampling and exporting to standard formats
-In the manuscript, the visualisations were performed with Python/Matplotlib/pyvis. Showing how to plot results are outside of the scope of the present guide. Nevertheless, we present here a procedure to extract summary statistics of the posterior sample for using (e.g. plotting) using other software.
-
-
-:END:
 
 
 

@@ -1,16 +1,14 @@
-% Created 2021-11-11 Thu 17:10
+% Created 2022-01-24 Mon 19:07
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
-\usepackage{grffile}
 \usepackage{longtable}
 \usepackage{wrapfig}
 \usepackage{rotating}
 \usepackage[normalem]{ulem}
 \usepackage{amsmath}
-\usepackage{textcomp}
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
@@ -25,13 +23,13 @@
  pdftitle={A users' guide to apply the presence-only joint distribution framework for single species},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.1 (Org mode 9.5)}, 
+ pdfcreator={Emacs 27.1 (Org mode 9.6)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 \begin{abstract}
-This document is a guide to use the models described in the paper: \emph{A joint distribution framework to improve presence-only species distribution models by exploiting opportunistic surveys} (\cite{EscamillaMolgora2021}) for modelling species distributions with presence-only data.
+This document is a guide to use the models described in the paper: \emph{A joint distribution framework to improve presence-only species distribution models by exploiting opportunistic surveys} (\cite{EscamillaMolgora2021}) for modelling species distributions with presence-only data. This users' guide represents a static version. For an updated (and possibly improved) version, refer to the interactive Jupyter notebook at [\url{https://github.com/molgor/CAR-1SDM/blob/master/CAR-1SDM/notebooks/Users-guide.ipynb}].
 \end{abstract}
 
 The presented framework proposes three bayesian models for inferring single species distributions using solely observations of species occurrences (i.e. presence-only data).
@@ -43,7 +41,7 @@ The dependencies between processes \(P_X\) and \(P_Y\) are specified in terms of
 In the following sections we will apply models I, II and III in the \textbf{R} programming language using the package CARBayes (\cite{Lee2013}). The data used was obtained from GBIF using the dataset (\cite{gbifmexdata}). This document is intended to serve as a guide for modelling species distributions using the aforementioned framework. For further reference of the Bayesian methodologies, diagnoses and deeper analysis of lattice-based models refer to (\cite{Lee2013,Rue2005})
 
 \section{Model I}
-\label{sec:org7ed75fb}
+\label{sec:org0a3b132}
 
 This model assumes that the ecological suitability distribution (\(Y\)) and sampling effort \(X\) process are independent. The structure of the model is visualised as a directed acyclic graph (DAG) in the figure \ref{fig:M1}.  For a detail explanation of the model refer to the supplementary materials of the manuscript.
 
@@ -110,7 +108,7 @@ This model assumes that the ecological suitability distribution (\(Y\)) and samp
 \end{figure}
 
 \subsection{Running the model}
-\label{sec:orgd9f13f2}
+\label{sec:orge28e344}
 We begin by defining the formulas for the sampling effort (formula\textsubscript{sample}) and the environmental niche (formula\textsubscript{presence}).
 As we are dealing with only presence-absence realisations, we define a bernoulli process. That is, a binomial distribution with \(k=1\).
 This can be specified with a 'trials' vector built on only ones.
@@ -138,11 +136,6 @@ model1  <- joint.binomial.bymCARModel1(formula_S = formula_sample,
                                         verbose=TRUE)
 \end{verbatim}
 
-\begin{verbatim}
-TRUE
-\end{verbatim}
-
-
 In model I, the processes \(S\) (sample) and \(P\) (environment) are independent. The object model1 contains these independent components stored as attributes S and P respectively. To inspect the posterior summary statistics we can use the attribute summary.results on each process.
 
 \begin{verbatim}
@@ -165,7 +158,7 @@ sigma2 & 0.0312 & 0.0029 & 0.3400 & 10000 & 100.0 & 8.1 & 1.4\\
 \end{center}
 
 \subsection{Modelfit statistics}
-\label{sec:orgc5644bf}
+\label{sec:org2747ae5}
 Model fitting criteria can be inspected with the argument (modelfit). Available statistics are:
 Deviance information criteria (DIC), Watanabe-Akaike information Criterion (WAIC), log marginal predictive likelihood (LMPL), estimated effective number of parameters (p.d.) and  loglikelihood.
 
@@ -176,21 +169,29 @@ model1$S$modelfit
 \end{verbatim}
 
 \subsection{Convergence of the Markov chain by visual inspection}
-\label{sec:org3d84e50}
+\label{sec:org265df21}
 \begin{verbatim}
 library(coda)
 params.samples <- mcmc.list(model1$P$samples$beta)
 plot(params.samples)
 \end{verbatim}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{./traceplot.png}
+\caption{Traceplot of posterior distribution of parameters for Model I}
+\end{figure}
+
+
+
 \subsection{Cross-validation}
-\label{sec:org0418cfe}
+\label{sec:org86a5da8}
 In this subsection we will perform a cross-validation of model I. Cross validation of CAR models is not straight forward due to its spatial structure (lattice). The approach for this would be with data augmentation and the k-fold method (\cite{Geisser1975}). In this case we will randomly (without replacement) select 1/10 of the observations (sites) as missing data, fit the model, estimate the probability of \(Y\) and \(X\) on these sites and repeat this operation 10 times until we obtain a whole set of estimated observations. Afterwards we will calculate the the Receiver Operator Characteristic and its Area Under the Curve (i.e. AUC-ROC, also called ROC-curve).
 
 We will load the script init\textsubscript{data.R}
 
 \subsection{Setting the working directory.}
-\label{sec:orgdf01878}
+\label{sec:org9dc427d}
 Change accordingly to your installation.
 
 \begin{verbatim}
@@ -220,17 +221,12 @@ cbind(npresence_0,npresence_1,nsample_0,nsample_1,n_miss_presence,n_miss_sample)
 
 
 \subsection{Preparing the cross-validation}
-\label{sec:org7d03720}
+\label{sec:orgb25c04d}
 \begin{enumerate}
 \item We begin by loading necessary packages:
 \begin{verbatim}
     library(pROC)
     library('caret')
-\end{verbatim}
-
-\begin{verbatim}
-Error in library(pROC) : there is no package called ‘pROC’
-Error in library("caret") : there is no package called ‘caret’
 \end{verbatim}
 
 \item Create partitions for cross validation using the K-fold method (k=7) and prepare the dataframe to receive results.
@@ -243,18 +239,6 @@ Error in library("caret") : there is no package called ‘caret’
       i = 1
       DataFrame$predicted_values_CV <- NA
       DataFrame$predicted_valuesBernoulli <- NA
-\end{verbatim}
-
-\begin{verbatim}
-Error in which(!is.na(DataFrame$species)) : object 'DataFrame' not found
-Error: object 'DataFrame' not found
-Error in createFolds(y = Y_withoutNA, k = 7, returnTrain = FALSE) : 
-  could not find function "createFolds"
-Error: object 'DataFrame' not found
-Error in DataFrame$predicted_values_CV <- NA : 
-  object 'DataFrame' not found
-Error in DataFrame$predicted_valuesBernoulli <- NA : 
-  object 'DataFrame' not found
 \end{verbatim}
 
 \item Define the formulas for the presence (environmental) process \(Y\) and the sampling effort \(X\)
@@ -272,7 +256,6 @@ Error in DataFrame$predicted_valuesBernoulli <- NA :
      burnin=15000
      postburnin = burnin + 1000
 \end{verbatim}
-
 \begin{itemize}
 \item Perform the cross-validation
 \end{itemize}
@@ -309,12 +292,8 @@ Error in DataFrame$predicted_valuesBernoulli <- NA :
 \end{verbatim}
 \end{enumerate}
 
-\begin{verbatim}
-Error in validate : object 'validate' not found
-\end{verbatim}
-
 \subsubsection{Plot the RO curve}
-\label{sec:org7f37ee3}
+\label{sec:org19afc88}
 \begin{verbatim}
 pROC_obj <- roc(DataFrame$presences,DataFrame$predicted_values_CV,
                smoothed= TRUE,
@@ -326,14 +305,19 @@ plot(sens.ci,type="shape",col="lightblue")
 plot(sens.ci, type="bars")
 \end{verbatim}
 
-\begin{verbatim}
-org_babel_R_eoe
-\end{verbatim}
-
+Figure 3 shows the resulting output.
 
 Procedure for cross-validating models II and III can be performed similarly.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{./rocmodel1wNA.png}
+\caption{Resulting cross-validation curve}
+\end{figure}
+
+
 \section{Model II}
-\label{sec:org7a9efa2}
+\label{sec:orgb360ba3}
 This model assumes that the ecological suitability distribution (\(P\)) and sampling effort (\(S\)) processes are independent when conditioned to a common spatial structure (\(G\)) (a Gaussian Markov random field). The structure of the model is visualised as a directed acyclic graph (DAG) in the figure \ref{fig:M2}.  For a detail explanation of the model refer to the supplementary materials of the manuscript.
 
 \begin{figure}
@@ -394,7 +378,7 @@ This model assumes that the ecological suitability distribution (\(P\)) and samp
 \end{figure}
 
 \subsection{Running the model}
-\label{sec:orga9ace1b}
+\label{sec:org4790ff1}
 To run the model we first need to transform the data, specifically, the covariates matrix (i.e. design matrix). The transformation allows the fitting of specific covariates for each process (i.e. an environmental set of covariates and another set for the sampling effort).
 
 To do this, we stack the design matrices of \(S\) and \(P\) and extend the number of columns to the sum of both processes.
@@ -409,7 +393,8 @@ formula_presence = species ~ Elevationm + Precipitationm
 S <- model.frame(formula_sample, DataFrame,na.action='na.pass')
 P <- model.frame(formula_presence, DataFrame,na.action='na.pass')
 
-## Split response variables (lefthand side) and covariates (righthand side) from the design matrix
+## Split response variables (lefthand side) and covariates (righthand side)
+## from the design matrix
 SX <- select(S, -c(1))
 PX <- select(P, -c(1))
 Sy <- select(S, c(1))
@@ -444,13 +429,14 @@ SDM <- cbind(Y,X)
 \end{verbatim}
 
 \subsection{Defining other necessary arguments}
-\label{sec:org21036ac}
+\label{sec:org58b509c}
 \begin{verbatim}
 ## Get number of elements in the lattice,
 nK <- dim(M_bis)[1]
 
 ## make sequence vector for id.area
-## This is possible because the rows in adjacency matrix M_bis preserve the order of each element in the design matrix.
+## This is possible because the rows in adjacency matrix M_bis preserve the
+## order of each element in the design matrix.
 ida <- data.frame(seq(nK))
 idarea <- unlist(rbind(ida,ida))
 ## Assign values for the unstructured random effect (Zx, Zy).
@@ -465,7 +451,7 @@ indre <- c(Zx,Zy)
 \end{verbatim}
 
 \subsection{Running the model}
-\label{sec:org541f6ae}
+\label{sec:orgf718d66}
 \begin{verbatim}
 #formula_sample =  sample ~ Disttoroadm + Populationm
 #formula_presence = species ~ Elevationm + Precipitationm
@@ -503,7 +489,7 @@ model2$P$summary.results
 \end{verbatim}
 
 \section{Model III}
-\label{sec:org9abc7e3}
+\label{sec:org959c3de}
 This model assumes that processes \(S\) and \(P\) are correlated to each other. Both of them have a specific Gaussian Markov random field and these two spatial structures are correlated. The correlated spatial structure follows a multivariate CAR specification (\cite{kavanagh2016,Lee2013}). The structure of the model is visualised as a directed acyclic graph (DAG) in the figure \ref{fig:M3}.  For a detail explanation of the model refer to the supplementary materials of the manuscript.
 The joint probability distribution of \(P\) and \(S\) is given by:
  $$ [P , S ] = [P | GMRF_p] [ S | GMRF_s] $$
@@ -571,7 +557,7 @@ The joint probability distribution of \(P\) and \(S\) is given by:
 \end{figure}
 
 \subsection{Running the model}
-\label{sec:orgded8e53}
+\label{sec:orgbc76aec}
 Applying this model is straight forward. We only need to define an appropriate formula object.
 
 \begin{verbatim}
@@ -611,14 +597,6 @@ DIC & p.d & WAIC & p.w & LMPL & loglikelihood\\
 3976.2 & 93.21 & 3966.76 & 81.39 & -1982.01 & -1894.88\\
 \end{tabular}
 \end{center}
-
-:Logbook:
-\section{Extracting posterior sampling and exporting to standard formats}
-\label{sec:orge630661}
-In the manuscript, the visualisations were performed with Python/Matplotlib/pyvis. Showing how to plot results are outside of the scope of the present guide. Nevertheless, we present here a procedure to extract summary statistics of the posterior sample for using (e.g. plotting) using other software.
-
-
-:END:
 
 
 
